@@ -4,7 +4,7 @@
 - Emotion Recognition use local usb camera(has two steering gear) on Respberry PI 4B.
 - Use vidgear transmit real-time streaming to thingsboard cloud server.
 - Add a thingsboard widget to display the real-time streaming.
-- Control the steering gear from cloud manual or automatic (Arduino and zigbee).
+- Control the steering gear from cloud manual or automatic (Arduino and zigbee).(TODO)
 
 ## server code
 - [Vidgear](https://github.com/abhiTronix/vidgear) is a multi-threaded Video Processing Python framework. The server receive the streaming from the client.

@@ -1,0 +1,12 @@
+[Unit]
+Description = Thingsboard Camera Service
+After = rc.local.service
+
+[Service]
+Type = simple
+User = root
+Group = root
+ExecStart = /usr/bin/python /root/tb_cam/server/tb_cam_server.py
+
+[Install]
+WantedBy = multi-user.target

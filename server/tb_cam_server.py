@@ -3,6 +3,9 @@ from flask import Flask, render_template, Response
 from vidgear.gears import NetGear
 from imutils import build_montages
 import cv2
+import logging
+logging.basicConfig(filename="/var/log/tb_camera.log",format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
 #activate multiserver_mode
 options = {'multiserver_mode': False}
 
