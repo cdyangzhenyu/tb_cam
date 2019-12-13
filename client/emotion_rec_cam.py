@@ -5,6 +5,16 @@ from keras.models import load_model
 import numpy as np
 from vidgear.gears import NetGear
 import time
+import logging
+import sys
+
+logger = logging.getLogger(__name__)
+logger.setLevel(level = logging.INFO)
+handler = logging.FileHandler("/data/log/tb_cam.log")
+handler.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
 #activate multiserver_mode
 options = {'multiserver_mode': False}
@@ -12,9 +22,10 @@ options = {'multiserver_mode': False}
 #change following IP address '192.168.1.xxx' with Client's IP address and assign unique port address(for e.g 5566).
 server = NetGear(address = "your ip", port = '5566', protocol = 'tcp',  pattern = 1, receive_mode = False, logging=True, **options) # and keep rest of settings similar to Client
 
+cur_path = sys.path[0]
 # parameters for loading data and images
-detection_model_path = 'emotion_rec/haarcascade_files/haarcascade_frontalface_default.xml'
-emotion_model_path = 'emotion_rec/models/_mini_XCEPTION.102-0.66.hdf5'
+detection_model_path = cur_path+'/emotion_rec/haarcascade_files/haarcascade_frontalface_default.xml'
+emotion_model_path = cur_path+'/emotion_rec/models/_mini_XCEPTION.102-0.66.hdf5'
 preds=[]
 # hyper-parameters for bounding boxes shape
 # loading models
@@ -25,7 +36,7 @@ EMOTIONS = ["angry" ,"disgust","scared", "happy", "sad", "surprised","neutral"]
 feelings_faces = []
 emoji_face = []
 for index, emotion in enumerate(EMOTIONS):
-    feelings_faces.append(imutils.resize(cv2.imread('emotion_rec/emojis/' + emotion + '.png', -1),height=60,width=60))
+    feelings_faces.append(imutils.resize(cv2.imread(cur_path+'/emotion_rec/emojis/' + emotion + '.png', -1),height=60,width=60))
 
 # starting video streaming
 #cv2.namedWindow('your_face')
@@ -106,6 +117,7 @@ while True:
     time_of_trans = round((time.time()-time_of_trans), 4)*1000
     time_of_all = time_of_calc + time_of_trans
     print "time_of_all: %sms, time_of_calc: %sms,time_of_trans: %sms, current_fps: %sfps" % (time_of_all, time_of_calc, time_of_trans, current_fps)
+    logger.info("time_of_all: %sms, time_of_calc: %sms,time_of_trans: %sms, current_fps: %sfps" % (time_of_all, time_of_calc, time_of_trans, current_fps))
 
 camera.release()
 server.close()

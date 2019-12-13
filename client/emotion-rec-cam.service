@@ -1,0 +1,12 @@
+[Unit]
+Description = Emotion Rec Camera Service
+After = rc.local.service
+
+[Service]
+Type = simple
+User = root
+Group = root
+ExecStart = /usr/bin/python /root/tb_cam/client/emotion_rec_cam.py
+
+[Install]
+WantedBy = multi-user.target
