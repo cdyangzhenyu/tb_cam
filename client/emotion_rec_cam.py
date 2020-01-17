@@ -47,7 +47,10 @@ time_of_all = 0
 time_of_calc = 0
 time_of_trans = 0
 start_time = time.time()
+mod_index = 0
 while True:
+  mod_index += 1
+  try:
     new_time = time.time()
     time_of_calc = new_time
     delta = new_time - start_time
@@ -58,9 +61,12 @@ while True:
     frame = camera.read()[1]
     frame = imutils.resize(frame,width=300)
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    faces = face_detection.detectMultiScale(gray,scaleFactor=1.1,minNeighbors=5,minSize=(30,30),flags=cv2.CASCADE_SCALE_IMAGE)
 
-    canvas = np.zeros((250, 300, 3), dtype="uint8")
+    faces = []
+    if mod_index % 2 == 0:
+        faces = face_detection.detectMultiScale(gray,scaleFactor=1.1,minNeighbors=5,minSize=(30,30),flags=cv2.CASCADE_SCALE_IMAGE)
+
+    #canvas = np.zeros((250, 300, 3), dtype="uint8")
     frameClone = frame.copy()
     
     if len(faces) > 0:
@@ -85,24 +91,24 @@ while True:
                 # draw the label + probability bar on the canvas
                 emoji_face = feelings_faces[np.argmax(preds)]
                 w = int(prob * 300)
-                cv2.rectangle(canvas, (7, (i * 35) + 5),
-                (w, (i * 35) + 35), (0, 0, 255), -1)
-                cv2.putText(canvas, text, (10, (i * 35) + 23),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.45,
-                (255, 255, 255), 2)
+                #cv2.rectangle(canvas, (7, (i * 35) + 5),
+                #(w, (i * 35) + 35), (255, 64, 64), -1)
+                #cv2.putText(canvas, text, (10, (i * 35) + 23),
+                #cv2.FONT_HERSHEY_SIMPLEX, 0.45,
+                #(255, 255, 255), 1)
                 cv2.putText(frameClone, label, (fX, fY - 10),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.45, (255, 255, 0), 1)
                 cv2.rectangle(frameClone, (fX, fY), (fX + fW, fY + fH),
-                              (0, 0, 255), 2)
+                              (255, 255, 0), 1)# BGR
         for c in range(0, 3):
             frameClone[10:70, 240:300, c] = emoji_face[:, :, c] * \
             (emoji_face[:, :, 3] / 255.0) + frameClone[10:70,
             240:300, c] * (1.0 - emoji_face[:, :, 3] / 255.0)
     time_of_calc = round((time.time()-time_of_calc), 4)*1000
-    cv2.putText(frameClone, "FPS: %sfps" % current_fps, (10, 10), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.5, (0,0,255), 1)
-    cv2.putText(frameClone, "ALL_TIME: %sms" % time_of_all, (10, 20), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.5, (0,0,255), 1)
-    cv2.putText(frameClone, "CALC_TIME: %sms" % time_of_calc, (10, 30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.5, (0,0,255), 1)
-    cv2.putText(frameClone, "TRANS_TIME: %sms" % time_of_trans, (10, 40), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.5, (0,0,255), 1)
+    cv2.putText(frameClone, "FPS: %sfps" % current_fps, (10, 10), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.4, (255,255,0), 1)
+    cv2.putText(frameClone, "ALL_TIME: %sms" % time_of_all, (10, 20), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.4, (255,255,0), 1)
+    cv2.putText(frameClone, "CALC_TIME: %sms" % time_of_calc, (10, 30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.4, (255,255,0), 1)
+    cv2.putText(frameClone, "TRANS_TIME: %sms" % time_of_trans, (10, 40), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.4, (255,255,0), 1)
     #if cv2.waitKey(1) & 0xFF == ord('q'):
     #    break
     time_of_trans = time.time()
@@ -118,7 +124,8 @@ while True:
     time_of_all = time_of_calc + time_of_trans
     print "time_of_all: %sms, time_of_calc: %sms,time_of_trans: %sms, current_fps: %sfps" % (time_of_all, time_of_calc, time_of_trans, current_fps)
     logger.info("time_of_all: %sms, time_of_calc: %sms,time_of_trans: %sms, current_fps: %sfps" % (time_of_all, time_of_calc, time_of_trans, current_fps))
-
+  except:
+    pass
 camera.release()
 server.close()
 #cv2.destroyAllWindows()
