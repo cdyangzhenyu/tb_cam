@@ -18,7 +18,7 @@ camstream_cap = []
 
 class CamStreamer(object):
     def __init__(self):
-        self.client = NetGear(address = "192.168.0.10", port = "5566", protocol = 'tcp', pattern = 1, logging=True, receive_mode = True, **options)
+        self.client = NetGear(address = "192.168.0.10", port = "5567", protocol = 'tcp', pattern = 1, logging=True, receive_mode = True, **options)
 
     def __del__(self):
         self.client.close()
@@ -65,4 +65,4 @@ def video_feed():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True, port=15000)
+    app.run(host='0.0.0.0', debug=True, port=15001)

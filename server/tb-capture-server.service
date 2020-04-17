@@ -1,12 +1,12 @@
 [Unit]
-Description = Thingsboard Camera Service
+Description = Thingsboard Camera Capture Service
 After = rc.local.service
 
 [Service]
 Type = simple
 User = root
 Group = root
-ExecStart = /bin/sh /thingsboard/tb_cam/server/run.sh
+ExecStart = /bin/sh /thingsboard/tb_cam/server/run_cap.sh
 
 [Install]
 WantedBy = multi-user.target
